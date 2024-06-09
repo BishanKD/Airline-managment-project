@@ -2,6 +2,7 @@ const express = require('express')
 const { ObjectId } = require('mongodb')
 const { connectToDb, getDb } = require('./db')
 const { flightRouter } = require('./routes/flights')
+const { userRouter } = require('./routes/users');
 
 let db;
 
@@ -12,14 +13,16 @@ app.use((req, res, next) => {
     next()
 })
 app.use(express.json());
-app.use('/api/flights', flightRouter)
-
+app.use('/api/flights', flightRouter);
+app.use('/api/users', userRouter);
+app.use((req, res, next) => {
+    req.db = db;
+    next();
+});
 
 connectToDb((err) => {
     if(!err){
         db = getDb()
-        
-        
         app.listen(3000, () => {
             console.log('listening on port 3000')
         })

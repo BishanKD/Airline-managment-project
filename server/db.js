@@ -2,13 +2,15 @@ const { MongoClient } = require('mongodb')
 
 let dbConnection
 
-const connectToDb = () => {
+const connectToDb = (cb) => {
     return MongoClient.connect('mongodb://localhost:27017/test')
         .then((client) => {
-            dbConnection = client.db()
+            dbConnection = client.db();
+            cb();
         })
         .catch(err => {
-            console.log(err)
+            console.log(err);
+            cb();
         })
 }
 
